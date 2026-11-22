@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orvix | reset-password</title>
+    <link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/orvix-assets/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <span class="flash-icon">
+                        {% if category == 'success' %}
+                            ✓
+                        {% elif category == 'error' %}
+                            !
+                        {% else %}
+                            i
+                        {% endif %}
+                    </span>
+
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <h1>Orvix</h1>
+        <p class="subtitle">Reset your password</p>
+
+        
+
+        <form action="{{ url_for('reset_password', token=token) }}" method="POST">
+
+
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" name="new_pass" placeholder="Enter your new password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Re-enter new password</label>
+                <input type="password" name="re-password" placeholder="Re-enter your new password" required>
+
+            </div>
+
+            <button type="submit">Create new password</button>
+
+        </form>
+
+       
+    </div>
+</div>
+
+</body>
+</html>

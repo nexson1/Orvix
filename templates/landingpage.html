@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orvix | Welcome</title>
+    <link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/orvix-assets/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+   {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <span class="flash-icon">
+                        {% if category == 'success' %}
+                            ✓
+                        {% elif category == 'error' %}
+                            !
+                        {% else %}
+                            i
+                        {% endif %}
+                    </span>
+
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="auth-container">
+    <div class="auth-card landing-card">
+
+        <h1>Orvix</h1>
+
+        <h2>Manage Projects. Stay Organized.</h2>
+
+        <p class="subtitle">
+            Your workspace for organizing projects,
+            managing tasks and collaborating with your team.
+        </p>
+
+        <a href="{{ url_for('login') }}" class="btn">Login</a>
+
+        <a href="{{ url_for('register') }}" class="btn secondary">
+            Create Account
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

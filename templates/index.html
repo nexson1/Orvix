@@ -1,0 +1,570 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orvix — Workspace</title>
+<link rel="icon" type="image/png" sizes="64x64"
+      href="/static/images/orvix-assets/favicon.png?v=5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <span class="flash-icon">
+                        {% if category == 'success' %}
+                            ✓
+                        {% elif category == 'error' %}
+                            !
+                        {% else %}
+                            i
+                        {% endif %}
+                    </span>
+
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="#">
+    <img
+        src="{{ url_for('static', filename='images/orvix-assets/orvix-logo.png') }}"
+        alt="Orvix"
+        class="brand-logo"
+    >
+     
+</a>
+
+
+  <!-- <div class="workspace">
+    <span class="workspace-logo">A</span>
+    <div>
+      <b>Acme workspace</b>
+      <small>Free plan</small>
+    </div>
+    <span class="push">⌄</span>
+  </div> -->
+
+  <p class="nav-caption">WORKSPACE</p>
+
+  
+
+<nav>
+  <button class="nav-link active" data-view="overview">
+    ▦ <span>Overview</span>
+  </button>
+
+  <button class="nav-link" data-view="projects">
+    ◫ <span>Projects</span>
+    <small id="projectCount"><strong>{{ projects|length }}</strong></small>
+  </button>
+
+  <button class="nav-link" data-view="tasks">
+    ☷ <span>My tasks</span>
+  </button>
+</nav>
+
+  <p class="nav-caption space-top">NEED HELP</p>
+
+  <div class="sidebar-bottom">
+
+    <div class="help">
+      <b>Need a hand?</b>
+      <p>Visit our help centre for tips and guides.</p>
+      <a href="https://x.com/nex_xxe?s=11">Visit help centre ↗</a>
+    </div>
+
+    <div class="user">
+    <span class="avatar purple">
+        {{ current_user.username[0] | upper }}
+    </span>
+
+    <div>
+        <b>{{ current_user.username }}</b>
+        <small>{{ current_user.email }}</small>
+    </div>
+</div>
+
+    <!-- LOGOUT BUTTON -->
+    <a href="{{ url_for('logout') }}" class="logout-link">
+      ↪ Logout
+    </a>
+
+  </div>
+
+</aside>
+
+
+<main class="main">
+ 
+
+<header class="topbar">
+
+  <button class="mobile-menu" id="mobileMenu">☰</button>
+
+  <div class="crumb">
+    Workspace <span>/</span> <b id="crumb">Overview</b>
+  </div>
+
+  <div class="top-right">
+    <label class="global-search">
+      ⌕ <input id="globalSearch" placeholder="Search anything...">
+    </label>
+
+    
+    <span class="avatar purple">{{ current_user.username[0] | upper }}</span>
+  </div>
+
+</header>
+
+<!-- OVERVIEW -->
+
+<section class="view active" id="overview">
+
+  <!-- Welcome Section -->
+  <div class="welcome">
+
+    <div>
+      <p class="eyebrow">{{ current_time }}</p>
+
+      <h1>
+        {{ greeting }}, {{ current_user.username }} <em>✦</em>
+      </h1>
+
+      <p class="sub">
+        Here's what's happening across your workspace today.
+      </p>
+    </div>
+
+    <button class="btn primary" data-modal="projectModal">
+      ＋ New project
+    </button>
+
+  </div>
+
+
+  <!-- Statistics -->
+  <div class="stats">
+
+    <!-- Total Projects -->
+    <article class="stat">
+
+      <div class="stat-label">
+        Total projects
+        <span class="stat-icon lilac">◫</span>
+      </div>
+
+      <strong id="totalProjects">
+        {{ projects|length }}
+      </strong>
+
+      <small>
+        <b class="{{ project_change_class }}">
+          {{ project_change_icon }} {{ project_change }}
+        </b>
+        vs. last month
+      </small>
+
+    </article>
+
+
+    <!-- Tasks Completed -->
+    <article class="stat">
+
+      <div class="stat-label">
+        Tasks completed
+        <span class="stat-icon green">✓</span>
+      </div>
+
+      <strong>{{ completed_tasks }}/{{ total_tasks }}</strong>
+
+      <small>
+        {{ completion_rate }}% completion rate
+      </small>
+
+    </article>
+
+
+    <!-- Tasks In Progress -->
+    <article class="stat">
+
+      <div class="stat-label">
+        In progress
+        <span class="stat-icon amber">◷</span>
+      </div>
+
+      <strong>{{ in_progress_tasks }}</strong>
+
+      <small>Across all projects</small>
+
+    </article>
+
+  </div>
+
+
+  <!-- Dashboard Columns -->
+  <div class="columns">
+
+
+    <!-- Recent Projects -->
+    <article class="panel">
+
+      <div class="panel-head">
+
+        <div>
+          <h2>Recent projects</h2>
+          <p>Keep track of your team's work</p>
+        </div>
+
+        <button class="link-button" data-view="projects">
+          View all projects →
+        </button>
+
+      </div>
+
+
+      <div id="recentProjects">
+
+        {% for project in projects %}
+
+          <div class="project-row">
+
+            <span class="project-symbol purple">✦</span>
+
+            <div class="project-info">
+              <b>{{ project.project_name }}</b>
+              <small>Planning</small>
+            </div>
+
+          </div>
+
+        {% else %}
+
+          <p>No projects created yet.</p>
+
+        {% endfor %}
+
+      </div>
+
+    </article>
+
+
+
+    <!-- My Tasks -->
+    <article class="panel task-panel">
+
+      <div class="panel-head">
+
+        <div>
+          <h2>My tasks</h2>
+          <p>Tasks assigned to you</p>
+        </div>
+
+        <button class="link-button" data-view="tasks">
+          View all tasks →
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>TASK</th>
+              <th>PROJECT</th>
+              <th>PRIORITY</th>
+              <th>DUE DATE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+
+          <tbody id="overviewTasks"></tbody>
+
+        </table>
+
+      </div>
+
+    </article>
+
+
+  </div> <!-- End columns -->
+
+</section> <!-- End overview -->
+
+<!-- PROJECTS -->
+
+<section class="view" id="projects">
+
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">YOUR WORKSPACE</p>
+      <h1>Projects</h1>
+      <p class="sub">Plan, organise and track all your team's projects.</p>
+    </div>
+
+    <button class="btn primary" data-modal="projectModal">＋ New project</button>
+  </div>
+
+  <div class="toolbar">
+    <label class="search">⌕ <input id="projectSearch" placeholder="Search projects..."></label>
+
+    <select id="projectFilter">
+      <option value="all">All statuses</option>
+      <option>In progress</option>
+      <option>Planning</option>
+      <option>Completed</option>
+    </select>
+  </div>
+
+  <div class="project-grid" id="allProjects">
+    {% for project in projects %}
+
+<article class="project-card">
+
+    <div class="project-card-top">
+        <span class="project-symbol purple">✦</span>
+        <span class="status planning">Planning</span>
+    </div>
+
+    <h3>{{ project.project_name }}</h3>
+
+    <p>
+        {{ project.description or "No description added yet." }}
+    </p>
+
+</article>
+
+{% else %}
+<p>No projects created yet.</p>
+{% endfor %}
+  </div>
+
+</section>
+
+
+<!-- TASKS -->
+
+<section class="view" id="tasks">
+
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">YOUR WORKLOAD</p>
+      <h1>My tasks</h1>
+      <p class="sub">A focused view of everything on your plate.</p>
+    </div>
+
+    <button class="btn primary" data-modal="taskModal">＋ Add task</button>
+  </div>
+
+  <div class="toolbar">
+    <label class="search">⌕ <input id="taskSearch" placeholder="Search tasks..."></label>
+
+    <select id="taskFilter">
+      <option value="all">All statuses</option>
+      <option>Pending</option>
+      <option>In progress</option>
+      <option>Completed</option>
+    </select>
+  </div>
+
+  <article class="panel">
+
+   <article class="panel">
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>TASK</th>
+                    <th>PROJECT</th>
+                    <th>DUE DATE</th>
+                    <th>PRIORITY</th>
+                    <th>STATUS</th>
+                    <th>UPDATE STATUS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.task_project }}</td>
+                    <td>{{ task.due_date }}</td>
+                    <td>{{ task.priority }}</td>
+
+                  
+
+                    
+                    
+                    <td>
+                      <span class="status-badge {{ task.current_status.lower().replace(' ', '-') }}">
+                        {{ task.current_status }}
+                      </span>
+                    </td>
+                    <td>    
+                      <form class="status-form" method="POST" action="{{ url_for('update_status', task_id=task.id) }}">
+                         <select name="status" {% if task.current_status in ['Overdue', 'Completed'] %}disabled{% endif %}>
+
+                              {% if task.current_status in ['Overdue', 'Completed'] %}
+                                  <option selected>{{ task.current_status }}</option>
+                              {% else %}
+                                  <option value="Pending" {% if task.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                  <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                  <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                              {% endif %}
+
+                        </select>
+
+                                <button type="submit" {% if task.current_status in ['Overdue', 'Completed'] %}disabled{% endif %}>
+                                           Save
+                                </button>
+
+                      </form>
+                    </td>
+
+
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty">
+                        No tasks created yet.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</article>
+    </div>
+
+  </article>
+
+</section>
+
+
+
+</main>
+</div>
+
+
+<!-- PROJECT MODAL -->
+
+<div class="backdrop" id="projectModal">
+
+  <form class="modal" id="projectForm"  method="POST"
+    action="{{ url_for('create_project') }}">
+
+    <button type="button" class="close" data-close>×</button>
+
+    <p class="eyebrow">GET STARTED</p>
+    <h2>Create a project</h2>
+    <p class="sub">Give your team a clear place to collaborate.</p>
+
+    <label>
+      Project name
+      <input name="name" required placeholder="e.g. Website redesign">
+    </label>
+
+    <label>
+      Description
+      <textarea name="description" required rows="3" placeholder="What is this project about?"></textarea>
+    </label>
+
+    <label>
+      Project colour
+      <select name="color" required>
+        <option value="purple">Purple</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="orange">Orange</option>
+      </select>
+    </label>
+
+    <div class="modal-actions">
+      <button type="button" class="btn quiet" data-close>Cancel</button>
+      <button type="submit" class="btn primary">Create project</button>
+    </div>
+
+  </form>
+
+</div>
+
+
+<!-- TASK MODAL -->
+
+<div class="backdrop" id="taskModal">
+
+  <form class="modal" id="taskForm"  method="POST"
+    action="{{ url_for('create_task') }}">
+
+    <button type="button" class="close" data-close>×</button>
+
+    <p class="eyebrow">STAY ON TRACK</p>
+    <h2>Add a task</h2>
+    <p class="sub">Break your project into manageable steps.</p>
+
+    <label>
+      Task name
+      <input name="name" required placeholder="What needs to get done?">
+    </label>
+
+    <label>
+      Project
+      <select name="project"required id="taskProject">
+        {% for project in projects %}
+         <option value="{{ project.id }}">{{ project.project_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Priority
+      <select name="priority">
+        <option>Medium</option>
+        <option>High</option>
+        <option>Low</option>
+      </select>
+    </label>
+
+    <label>
+      Due date
+      <input name="due" required type="date">
+    </label>
+
+    <div class="modal-actions">
+      <button type="button" class="btn quiet" data-close>Cancel</button>
+      <button class="btn primary">Add task</button>
+    </div>
+
+  </form>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>

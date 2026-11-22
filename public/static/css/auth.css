@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    min-height: 100vh;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-card {
+    background: white;
+    width: 100%;
+    max-width: 430px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h1 {
+    text-align: center;
+    color: #3157d5;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.auth-card h2 {
+    margin-bottom: 22px;
+    color: #222;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    border-color: #3157d5;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 7px;
+    background: #3157d5;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #2445b5;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.auth-link a {
+    color: #3157d5;
+    text-decoration: none;
+    font-weight: bold;
+}
+.landing-card {
+    text-align: center;
+}
+
+.landing-card h2 {
+    margin: 25px 0 15px;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: #3157d5;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background: #2445b5;
+}
+
+.btn.secondary {
+    background: white;
+    color: #3157d5;
+    border: 1px solid #3157d5;
+}
+
+.btn.secondary:hover {
+    background: #f4f6fb;
+}
+
+/* FLASH NOTIFICATION */
+
+.flash-container {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    width: max-content;
+    max-width: 90%;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff !important;
+    background-color: #16a34a !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+
+    animation:
+        slideDown 0.4s ease forwards,
+        fadeAway 0.5s ease 3.5s forwards;
+}
+
+/* FLASH NOTIFICATIONS */
+
+.flash-container {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    width: max-content;
+    max-width: 90%;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+
+    animation:
+        slideDown 0.4s ease forwards,
+        fadeAway 0.5s ease 3.5s forwards;
+}
+
+/* SUCCESS - GREEN */
+.flash-message.success {
+    background-color: #16a34a !important;
+}
+
+/* ERROR - RED */
+.flash-message.error {
+    background-color: #dc2626 !important;
+}
+
+/* WARNING - ORANGE */
+.flash-message.warning {
+    background-color: #d97706 !important;
+}
+
+/* INFO - BLUE */
+.flash-message.info {
+    background-color: #2563eb !important;
+}
+
+.flash-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeAway {
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+        visibility: hidden;
+    }
+}
+.forgot-link{
+    color: red;
+    font-size: smaller;
+    text-decoration: none;
+}
+.hinted_pass{
+    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: smaller;
+
+}
