@@ -28,8 +28,16 @@ import socket
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+database_url = os.getenv('ORVIX_DATABASE_URL')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+if database_url:
+    database_url = database_url.replace(
+        'postgresql://',
+        'postgresql+psycopg://',
+        1
+    )
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 db = SQLAlchemy(app)
