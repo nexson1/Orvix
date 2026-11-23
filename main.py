@@ -383,23 +383,23 @@ def dashboard():
 
         if project_change_value > 0:
             project_change_class = "positive"
-            project_change_icon = "↗"
+            project_change_icon = ""
         elif project_change_value < 0:
             project_change_class = "negative"
-            project_change_icon = "↘"
+            project_change_icon = ""
         else:
             project_change_class = "neutral"
-            project_change_icon = "→"
+            project_change_icon = ""
 
     elif projects_this_month > 0:
         project_change = "New"
         project_change_class = "positive"
-        project_change_icon = "↗"
+        project_change_icon = ""
 
     else:
         project_change = "0%"
         project_change_class = "neutral"
-        project_change_icon = "→"
+        project_change_icon = ""
 
 
 
