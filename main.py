@@ -13,6 +13,9 @@ import  smtplib
 import secrets
 from itsdangerous import URLSafeSerializer, SignatureExpired, BadSignature, URLSafeTimedSerializer
 import socket
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_limiter.errors import RateLimitExceeded
 
 
 
@@ -27,6 +30,12 @@ import socket
 
 load_dotenv()
 app = Flask(__name__)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    storage_uri=os.getenv("REDIS_URL"),
+    default_limits=[]
+)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 database_url = os.getenv('ORVIX_DATABASE_URL')
 
@@ -160,6 +169,7 @@ def register():
 
 
 @app.route('/login', methods = ['POST', 'GET'])
+@limiter.limit("5 per minute")
 def login():
          if request.method == 'POST':
             email = request.form['email']
@@ -173,6 +183,10 @@ def login():
             else:
                flash("Invalid Email or password", "error")
          return render_template('login.html')
+@app.errorhandler(RateLimitExceeded)
+def handle_rate_limit(e):
+    flash("Too many login attempts. Please wait 1 minute before trying again.", "error")
+    return redirect(url_for("login"))
 
 @app.route('/api/search')
 @login_required
