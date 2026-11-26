@@ -280,8 +280,6 @@ def reset_password(token):
 
 
 
-
-
 @app.route('/password-recovery', methods=['POST', 'GET'])
 def recover_password():
 
@@ -307,9 +305,9 @@ def recover_password():
 
             message = f"""Subject: Reset Password
 
-Please click this link to reset your password:
-{link}
-"""
+            Please click this link to reset your password:
+            {link}
+            """
 
             smtp_ports = [587, 465]
 
@@ -325,7 +323,7 @@ Please click this link to reset your password:
                             connection.login(email, password)
                             connection.sendmail(email, pass_email, message)
 
-                        f
+                        
 
 
                     elif port == 465:
@@ -350,7 +348,6 @@ Please click this link to reset your password:
             flash("Email address not found", "error")
 
     return render_template('recpass.html')
-
 
 
 
