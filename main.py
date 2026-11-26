@@ -325,7 +325,7 @@ Please click this link to reset your password:
                             connection.login(email, password)
                             connection.sendmail(email, pass_email, message)
 
-                        flash("An email has been sent", "success")
+                        f
 
 
                     elif port == 465:
@@ -335,9 +335,9 @@ Please click this link to reset your password:
 
                         print(f"Email successfully sent using port {port}!")
                         email_sent = True
-                        flash("An email has been sent", "success")
+                    flash("An email has been sent", "success")
                         
-                        break
+                    break
 
                 except (smtplib.SMTPException, OSError) as error:
                     print(f"Port {port} failed: {error}")
