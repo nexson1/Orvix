@@ -259,7 +259,7 @@ def reset_password(token):
     user = Users.verify_reset_token(token)
 
     if user is None:
-        flash('That is an invalid or expired token.', 'danger')
+        flash('That is an invalid or expired token.', 'error')
         return redirect(url_for('recover_password'))
         
 
@@ -301,30 +301,50 @@ def recover_password():
                 _external=True
             )
 
-        try:
-                    with smtplib.SMTP('smtp.gmail.com', 587, timeout=20) as connection:
-                        print("Connected to Gmail")
+    
+            email = os.getenv('MY_EMAIL')
+            password = os.getenv('MY_PASSWORD')
 
-                        connection.starttls()
-                        print("TLS established")
+            message = f"""Subject: Reset Password
 
-                        connection.login(
-                            user=os.getenv('MY_EMAIL'),
-                            password=os.getenv('MY_PASSWORD')
-                        )
-                        print("Login successful")
+Please click this link to reset your password:
+{link}
+"""
 
-                        connection.sendmail(
-                            os.getenv('MY_EMAIL'),
-                            pass_email,
-                            f'Subject: RESET PASSWORD\n\nPlease click this {link}'
-                        )
+            smtp_ports = [587, 465]
 
-                        print("Email sent successfully")
+            email_sent = False
 
-        except Exception as e:
-                    print("ERROR TYPE:", type(e).__name__)
-                    print("ERROR MESSAGE:", str(e))
+            for port in smtp_ports:
+                try:
+                    print(f"Trying Gmail SMTP port {port}...")
+
+                    if port == 587:
+                        with smtplib.SMTP('smtp.gmail.com', port, timeout=20) as connection:
+                            connection.starttls()
+                            connection.login(email, password)
+                            connection.sendmail(email, pass_email, message)
+
+                        flash("An email has been sent", "success")
+
+
+                    elif port == 465:
+                        with smtplib.SMTP_SSL('smtp.gmail.com', port, timeout=20) as connection:
+                            connection.login(email, password)
+                            connection.sendmail(email, pass_email, message)
+
+                        print(f"Email successfully sent using port {port}!")
+                        email_sent = True
+                        flash("An email has been sent", "success")
+                        
+                        break
+
+                except (smtplib.SMTPException, OSError) as error:
+                    print(f"Port {port} failed: {error}")
+                except Exception as e:
+                                    print("ERROR TYPE:", type(e).__name__)
+                                    print("ERROR MESSAGE:", str(e))
+                                    flash('An error occured','error')
 
         else:
             flash("Email address not found", "error")
